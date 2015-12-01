@@ -1,4 +1,46 @@
 /* CSS declarations go here */
-.hidden_div{
+html {
+	position: relative;
+	min-height: 100%;
+}
+body {
+	padding-top:60px;
+	margin-bottom: 60px;
+}
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 60px;
+	background-color: #11f5f5;
+}
+.hidden_div {
 	display:none;
+}
+.url_item {
+	min-height: 200px;
+	border: 1px solid black;
+	margin: 5px;
+	background-color: #aaaaf5;
+}
+
+/* Login cheats */
+.navbar-collapse.in {
+	overflow-y: visible;
+}
+#login-buttons{
+	display: block;
+}
+#login-dropdown-list {
+	left: auto;
+	right: -1px;
+}
+@media (max-width: 768px) {
+	#login-dropdown-list {
+		width: 100%;
+		right: 0 !important;
+		left: 0 !important;
+		position: absolute;
+		margin-left: 0px;
+	}
 }
