@@ -25,7 +25,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Site Ace</a>
+				<a class="navbar-brand" href="/">Site Ace</a>
 			</div>
 			<div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
 				<form class="navbar-form navbar-left" role="search">
@@ -50,46 +50,59 @@
 	<div class="container">
 		<div class="jumbotron1">
 			<h1>Welcome to image share {{username}}!</h1>
-			<a href="/images" class="btn btn-info">ENTER</a>
+			{{#if currentUser}}
+			<a class="btn btn-default js-toggle-website-form" href="#">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+			</a>
+			{{/if}}
 		</div>
 	</div>
+	<!-- New link form Template -->
+	<!-- show if user logged in -->
+	<div id="website_form" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title">
+					</div>
+				</div>
+				<div class="modal-body">
+					{{#if currentUser}}
+					<form class="js-save-website-form">
+						<div class="form-group">
+							<label for="url">Site address</label>
+							<input type="text" class="form-control" id="url" placeholder="http://www.mysite.com">
+						</div>
+						<div class="form-group">
+							<label for="title">Title</label>
+							<input type="text" class="form-control" id="title" placeholder="Mysite">
+						</div>
+						<div class="form-group">
+							<label for="description">Description</label>
+							<input type="text" class="form-control" id="description" placeholder="I found this site really useful for ...">
+						</div>
+
+						<button type="submit" class="btn btn-default">Submit</button>
+					</form>
+					{{else}}
+					Login
+					{{/if}}
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-warning" data-dismiss="modal">cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End: New link form Template -->
 </template>
 <!-- End: Welcome Template -->
-
-<!-- New link form Template -->
-<!-- show if user logged in -->
-<template name="website_form">
-	<a class="btn btn-default js-toggle-website-form" href="#">
-		<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-	</a>
-	<div id="website_form" class="hidden_div">
-		<form class="js-save-website-form">
-			<div class="form-group">
-				<label for="url">Site address</label>
-				<input type="text" class="form-control" id="url" placeholder="http://www.mysite.com">
-			</div>
-			<div class="form-group">
-				<label for="title">Title</label>
-				<input type="text" class="form-control" id="title" placeholder="Mysite">
-			</div>
-			<div class="form-group">
-				<label for="description">Description</label>
-				<input type="text" class="form-control" id="description" placeholder="I found this site really useful for ...">
-			</div>
-
-			<button type="submit" class="btn btn-default">Submit</button>
-		</form>
-	</div>
-</template>
-<!-- End: New link form Template -->
 
 <!-- Links list Template -->
 <template name="website_list">
 	<div class="container">
 		<div class="row">
-		{{#each websites}}
-		{{>website_item}}
-		{{/each}}
+			{{#each websites}} {{>website_item}} {{/each}}
 		</div>
 	</div>
 </template>
@@ -99,17 +112,30 @@
 		<p>
 			{{description}}
 		</p>
-		<a href="#" class="btn btn-default js-upvote">
+		<a href="#" class="btn btn-default js-upvote {{isEnabled}}">
+			{{upVoted}}
 			<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
 		</a>
-		<a href="#" class="btn btn-default js-downvote">
+		<a href="#" class="btn btn-default js-downvote {{isEnabled}}">
+			{{downVoted}}
 			<span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
 		</a>
+		<p>Created by: {{getUser createdBy}}</p>
+		<p>Added on: {{prettyDate createdOn}}</p>
+		<a href="/url/{{_id}}">go to</a>
 		<!-- you will be putting your up and down vote buttons in here! -->
 	</div>
 </template>
 <!-- End: Links list Template -->
-
+<!-- Item -->
+<template name="item">
+	<div class="container">
+		<div class="row">
+			{{title}}
+		</div>
+	</div>
+</template>
+<!-- End: Item -->
 <!-- Footer Template -->
 <template name="footer">
 	<footer>
