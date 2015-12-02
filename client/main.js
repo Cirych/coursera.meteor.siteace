@@ -1,8 +1,3 @@
-/* global Websites */
-/* global Template */
-/* global Router */
-/* global $ */
-
 /////
 // routing 
 /////
@@ -22,7 +17,10 @@ Router.route('/url/:_id', function () {
 	this.render('item', {
 		to: "main",
 		data() {
-			return Websites.findOne({_id:this.params._id});
+			return {
+				item: Websites.findOne({_id:this.params._id}),
+				comments: Comments.find({websiteId: this.params._id})
+			}
 		}
 	});
 });
@@ -70,7 +68,6 @@ Template.website_item.events({
 Template.welcome.events({
 	"click .js-toggle-website-form":function(event){
 		$("#website_form").modal('show');
-		console.log('show modal add form');
 	},
 	"submit .js-save-website-form":function(event){
 		if (Meteor.user()){
@@ -85,6 +82,42 @@ Template.welcome.events({
     	});
 		}
 		$("#website_form").modal('hide');
+		return false;
+	},
+	"blur #url":function(event){
+		let url = event.target.value;
+		let formGroup = event.target.form.children[0].classList;
+		if(url) {
+			extractMeta(url, function (err, res) {
+				if(!$.isEmptyObject(res)) {
+					event.target.form[1].value = res.title || "";
+					event.target.form[2].value = res.description || "";
+					formGroup.toggle("has-error",false);
+					formGroup.toggle("has-success");
+				}
+				else {
+					event.target.form[1].value = "";
+					event.target.form[2].value = "";
+					formGroup.toggle("has-success",false);
+					formGroup.toggle("has-error");
+				}
+			});
+		}
+	}
+});
+Template.item.events({
+	"submit .js-save-comment-form":function(event){
+		//console.log(this.item._id);
+		if (Meteor.user()){
+		Comments.insert({
+    		websiteId: this.item._id,
+    		userId: Meteor.user()._id, 
+    		author: Meteor.user().username,
+			createdOn: new Date(),
+			body: event.target.newcomment.value
+    	});
+		}
+		event.target.newcomment.value = "";
 		return false;
 	}
 });

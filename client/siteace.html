@@ -131,8 +131,31 @@
 <template name="item">
 	<div class="container">
 		<div class="row">
-			{{title}}
+			{{item.url}}<br>
+			{{item.title}}<br>
+			{{item.description}}<br>
+			
 		</div>
+		<!-- Comments -->
+		{{#each comments}} {{> comment}} {{/each}}
+		<!-- New comment -->
+		{{#if currentUser}}
+		<form class="js-save-comment-form">
+			<div class="form-group">
+				<label for="newcomment">Add comment</label>
+				<textarea cols="40" rows="3" class="form-control" name="newcomment" id="newcomment" placeholder="New comment..."></textarea>
+			</div>
+			<button type="submit" class="btn btn-default">Send</button>
+		</form>
+		{{/if}}
+		<!-- End: Comments -->
+	</div>
+</template>
+<template name="comment">
+	<div>
+		<p>{{author}}</p>
+		<p>{{prettyDate createdOn}}</p>
+		<p>{{body}}</p>
 	</div>
 </template>
 <!-- End: Item -->

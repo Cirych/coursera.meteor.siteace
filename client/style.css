@@ -23,7 +23,9 @@ footer {
 	margin: 5px;
 	background-color: #aaaaf5;
 }
-
+.red {
+	
+}
 /* Login cheats */
 .navbar-collapse.in {
 	overflow-y: visible;

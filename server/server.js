@@ -3,7 +3,7 @@
     // code to run on server at startup
     if (!Websites.findOne()){
     	console.log("No websites yet. Creating starter data.");
-    	  Websites.insert({
+    	  var GoldsmithsId = Websites.insert({
     		title:"Goldsmiths Computing Department", 
     		url:"http://www.gold.ac.uk/computing/", 
     		description:"This is where this course was developed.",
@@ -11,6 +11,22 @@
 			downVoted: 0,
     		createdOn:new Date()
     	});
+      
+      Comments.insert({
+        websiteId: GoldsmithsId,
+        userId: null,
+        author: null,
+        createdOn: new Date(),
+        body: "test1"
+      });
+      Comments.insert({
+        websiteId: GoldsmithsId,
+        userId: null,
+        author: null,
+        createdOn: new Date(),
+        body: "test2"
+      });
+      
     	 Websites.insert({
     		title:"University of London", 
     		url:"http://www.londoninternational.ac.uk/courses/undergraduate/goldsmiths/bsc-creative-computing-bsc-diploma-work-entry-route", 
