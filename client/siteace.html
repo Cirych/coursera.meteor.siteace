@@ -1,5 +1,6 @@
 <head>
-	<title>siteace</title>
+	<title>Siteace</title>
+	<meta name="description" content="webpages.meteor.com">
 </head>
 
 <body>
@@ -9,6 +10,7 @@
 	{{> navbar}}
 	{{> yield "welcome"}}
 	{{> yield "main"}}
+	{{> recommends}}
 	{{> footer}}
 </template>
 <!-- End: Router Layout-->
@@ -28,11 +30,11 @@
 				<a class="navbar-brand" href="/">Site Ace</a>
 			</div>
 			<div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
-				<form class="navbar-form navbar-left" role="search">
+				<form id="search" class="navbar-form navbar-left" role="search">
 					<div class="input-group">
-						<input type="text" class="form-control" placeholder="Search for...">
+						<input type="text" id="searchValue" class="form-control" placeholder="Search for...">
 						<span class="input-group-btn">
-							<button class="btn btn-default" type="button">Go!</button>
+							<button type="submit" class="btn btn-default">Go!</button>
 						</span>
 					</div>
 				</form>
@@ -108,6 +110,7 @@
 </template>
 <template name="website_item">
 	<div class="url_item col-xs-12 col-sm-3 col-md-2 col-lg-1">
+		{{#if recommends}}<span class="label label-warning">Recommended</span>{{/if}}
 		<a href="{{url}}">{{title}}</a>
 		<p>
 			{{description}}
@@ -159,6 +162,11 @@
 	</div>
 </template>
 <!-- End: Item -->
+<!-- Recommends -->
+<template name="recommends">
+	<hr>
+</template>
+<!-- End: Recommends -->
 <!-- Footer Template -->
 <template name="footer">
 	<footer>

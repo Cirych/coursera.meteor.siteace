@@ -14,9 +14,12 @@ Router.route('/', function () {
 	});
 });
 Router.route('/url/:_id', function () {
+	Session.set("searchValue", null);
 	this.render('item', {
 		to: "main",
 		data() {
+			Meteor.subscribe("websites");
+			Meteor.subscribe("comments", Session.get("searchValue"));
 			return {
 				item: Websites.findOne({_id:this.params._id}),
 				comments: Comments.find({websiteId: this.params._id})
@@ -32,6 +35,7 @@ Router.route('/url/:_id', function () {
 // helper function that returns all available websites
 Template.website_list.helpers({
 	websites(){
+		Meteor.subscribe("websites", Session.get("searchValue"));
 		return Websites.find({}, {sort:{upVoted: -1}});
 	}
 });
@@ -45,25 +49,45 @@ Template.website_item.helpers({
 	},
 	isEnabled() {
 		return Meteor.user()?"":"disabled";
+	},
+	recommends(){
+		Meteor.subscribe("recommends");
+		return Stats.findOne({recommends:this._id});
+	}
+});
+Template.recommends.helpers({
+	recommends(){
+		//Meteor.subscribe("websites");
+		//var recs = Stats.findOne({});
+		//console.log(Stats.findOne({})._id);
+		//return Websites.find();
 	}
 });
 
 /////
 // template events 
 /////
+Template.navbar.events({
+	"submit #search":function(event){
+		Session.set("searchValue", event.target.searchValue.value);
+		return false;
+	}
+});
 
 Template.website_item.events({
 	"click .js-upvote":function(event){
 		var website_id = this._id;
 		Websites.update({_id:website_id},{$inc:{upVoted:1}});
+		Meteor.call("addVoteUp", website_id);
 		return false;
 	}, 
 	"click .js-downvote":function(event){
 		var website_id = this._id;
 		Websites.update({_id:website_id},{$inc:{downVoted:1}});
+		Meteor.call("addVoteDown", website_id);
 		return false;
 	}
-})
+});
 
 Template.welcome.events({
 	"click .js-toggle-website-form":function(event){
