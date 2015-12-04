@@ -1,61 +1,9 @@
 // DB for statistics, only server
-/*
-Websites._ensureIndex({
-  "title": "text",
-  "description": "text"
-});
-Comments._ensureIndex({
-  "body": "text"
-});
-*/
-
-Meteor.publish("websites", function (searchValue) {
-  if (!searchValue)
+Meteor.publish("websites", function () {
     return Websites.find({});
-  return Websites.find({ $text: { $search: searchValue } });
 });
-Meteor.publish("comments", function (searchValue) {
-  if (!searchValue)
+Meteor.publish("comments", function () {
     return Comments.find({});
-  return Comments.find({ $text: { $search: searchValue } });
-});
-Meteor.publish("recommends", function () {
-  return Stats.find({ _id: this.userId });
-});
-
-Meteor.methods({
-  addVoteUp(website_id) {
-    let titleArr = Websites.findOne({ _id: website_id }).title.split(/\W+/);
-    let recommends = [];
-    titleArr.forEach(function (item) {
-      if (item.length > 3) {
-        Websites.find({ $text: { $search: item } }).forEach(function (website) {
-          if (website._id != website_id &&
-            !Stats.findOne({ _id: Meteor.userId(), voteup: website._id }))
-            recommends.push(website._id);
-        });
-      }
-    });
-    Stats.update(
-      { _id: Meteor.userId() },
-      { $addToSet: { voteup: website_id, recommends: { $each: recommends } } },
-      { upsert: true }
-      );
-    Stats.update(
-      { _id: Meteor.userId() },
-      { $pull: { recommends: website_id } },
-      { upsert: true }
-      );
-  }
-});
-Meteor.methods({
-  addVoteDown(website_id) {
-    Stats.update(
-      { _id: Meteor.userId() },
-      { $addToSet: { votedown: website_id } },
-      { upsert: true }
-      );
-  }
 });
 
 // start up function that creates entries in the Websites databases.
