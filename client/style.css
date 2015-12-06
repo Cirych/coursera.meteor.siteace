@@ -69,12 +69,14 @@ footer span {
 .url_item_in,
 .item_head,
 .item_description,
-.item_created {
+.item_created,
+.item_info_full {
 	overflow: hidden;
 }
 .item_description_full {
 	min-height: 200px;
 }
+
 .comments {
 	margin-top: 10px;
 	margin-bottom: 40px;
