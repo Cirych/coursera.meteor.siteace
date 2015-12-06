@@ -1,10 +1,3 @@
-///
-// utils
-///
-RegExp.escape = function(s) {  
-  return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-};
-
 /////
 // routing 
 /////
@@ -22,20 +15,33 @@ Router.route('/', function () {
 		to: "main"
 	});
 });
+Router.route('/url', function () {
+	Session.set("searchValue", null);
+	this.render('website_list', {
+		to: "main"
+	});
+});
 Router.route('/url/:_id', function () {
 	Session.set("searchValue", null);
 	this.render('item', {
 		to: "main",
 		data() {
+			let id = new Meteor.Collection.ObjectID(this.params._id);
 			Meteor.subscribe("websites");
 			Meteor.subscribe("comments");
-			let search = {websiteId: this.params._id}, searchValue;
+			let search = {websiteId: id}, searchValue;
 			if (searchValue = Session.get("searchValue")) {
 				searchValue = RegExp.escape(searchValue);
-				search = {websiteId: this.params._id, body:{ $regex: searchValue, $options: 'i' } };
+				search = {websiteId: id, body:{ $regex: searchValue, $options: 'i' } };
 			}
+			let curItem = Websites.findOne({_id:id});
+			if(curItem == null) return {};
+			let nextItem = Websites.find({_id:{$gt:curItem._id}},{sort: {_id: 1}, limit: 1}).fetch()[0];
+			let prevItem = Websites.find({_id:{$lt:curItem._id}},{sort: {_id: -1}, limit: 1}).fetch()[0];
 			return {
-				item: Websites.findOne({ _id: this.params._id }),
+				item: curItem,
+				next: nextItem?{link:"/url/"+nextItem._id._str, enabled:""}:{link:"#", enabled:"disabled"},
+				prev: prevItem?{link:"/url/"+prevItem._id._str, enabled:""}:{link:"#", enabled:"disabled"},
 				comments: Comments.find(search)
 			}
 		}
@@ -60,13 +66,6 @@ Template.website_list.helpers({
 	}
 });
 Template.website_item.helpers({
-	getUser(user_id){
-		let user = Meteor.users.findOne({_id:user_id});
-		if(user)
-			return user.username;
-		else
-			return "anon";
-	},
 	isEnabled() {
 		return Meteor.user()?"":"disabled";
 	},
@@ -86,35 +85,22 @@ Template.navbar.events({
 });
 
 Template.website_item.events({
-	"click .js-upvote": function (event) {
-		var website_id = this._id;
-		Websites.update({ _id: website_id }, { $inc: { upVoted: 1 } });
-		let titleArr = this.title.split(/\W+/);
-		let recommends = titleArr.reduce(function (arr, item) {
-			if (item.length > 3) {
-				return Websites.find({ $or: [{ title: { $regex: item, $options: 'i' } }, { description: { $regex: item, $options: 'i' } }] })
-					.map(function (website) {return website._id })
-					.concat(arr);
-			}
-			return arr;
-		}, []);
-		Meteor.users.update(
-			{ _id: Meteor.userId() },
-			{ $addToSet: { 'profile.voteup': website_id, 'profile.recommends': { $each: recommends } } }
-			);
-		Meteor.users.update(
-			{ _id: Meteor.userId() },
-			{ $pull: { 'profile.recommends': website_id } }
-			);
+	"click .js-upvote": function () {
+		upVote(this);
 		return false;
 	},
-	"click .js-downvote": function (event) {
-		let website_id = this._id;
-		Websites.update({ _id: website_id }, { $inc: { downVoted: 1 } });
-		Meteor.users.update(
-			{ _id: Meteor.userId() },
-			{ $addToSet: { 'profile.votedown': website_id } }
-			);
+	"click .js-downvote": function() {
+		downVote(this);
+		return false;
+	}
+});
+Template.item.events({
+	"click .js-upvote": function () {
+		upVote(this.item);
+		return false;
+	},
+	"click .js-downvote": function() {
+		downVote(this.item);
 		return false;
 	}
 });
@@ -181,6 +167,16 @@ Template.item.events({
 Template.registerHelper('prettyDate', function(date) {
 	return moment(date).calendar();
 });
+Template.registerHelper('_id', function() {
+	return this._id._str;
+});
+Template.registerHelper('getUser', function(userId) {
+	let user = Meteor.users.findOne({_id:userId});
+		if(user)
+			return user.username;
+		else
+			return "anon";
+});
 
 /// accounts config
 
@@ -198,4 +194,3 @@ else {
 }
 }
 });
-

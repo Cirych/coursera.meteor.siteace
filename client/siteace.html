@@ -10,7 +10,6 @@
 	{{> navbar}}
 	{{> yield "welcome"}}
 	{{> yield "main"}}
-	{{> recommends}}
 	{{> footer}}
 </template>
 <!-- End: Router Layout-->
@@ -27,14 +26,19 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/">Site Ace</a>
+				<a class="navbar-brand" href="/">
+					<span class="glyphicon glyphicon-education" aria-hidden="true"></span>
+					Site Ace
+				</a>
 			</div>
 			<div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
 				<form id="search" class="navbar-form navbar-left" role="search">
 					<div class="input-group">
 						<input type="text" id="searchValue" class="form-control" placeholder="Search for...">
 						<span class="input-group-btn">
-							<button type="submit" class="btn btn-default">Go!</button>
+							<button type="submit" class="btn btn-primary">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+							</button>
 						</span>
 					</div>
 				</form>
@@ -53,8 +57,8 @@
 		<div class="jumbotron1">
 			<h1>Welcome to image share {{username}}!</h1>
 			{{#if currentUser}}
-			<a class="btn btn-default js-toggle-website-form" href="#">
-				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+			<a class="btn btn-primary js-toggle-website-form" href="#" title="Add new URL">
+				<span class="item_add glyphicon glyphicon-plus" aria-hidden="true"></span> Add new URL!
 			</a>
 			{{/if}}
 		</div>
@@ -65,12 +69,12 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<div class="modal-title">
-					</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">New URL</h4>
 				</div>
-				<div class="modal-body">
-					{{#if currentUser}}
-					<form class="js-save-website-form">
+				<form class="js-save-website-form">
+					<div class="modal-body">
+						{{#if currentUser}}
 						<div class="form-group">
 							<label for="url">Site address</label>
 							<input type="text" class="form-control" id="url" placeholder="http://www.mysite.com">
@@ -83,16 +87,13 @@
 							<label for="description">Description</label>
 							<input type="text" class="form-control" id="description" placeholder="I found this site really useful for ...">
 						</div>
-
-						<button type="submit" class="btn btn-default">Submit</button>
-					</form>
-					{{else}}
-					Login
-					{{/if}}
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-warning" data-dismiss="modal">cancel</button>
-				</div>
+						{{else}} Login {{/if}}
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary">Submit</button>
+						<button class="btn btn-warning" data-dismiss="modal">cancel</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -109,69 +110,111 @@
 	</div>
 </template>
 <template name="website_item">
-	<div class="url_item col-xs-12 col-sm-3 col-md-2 col-lg-1">
-		{{#if recommends}}<span class="label label-warning">Recommended</span>{{/if}}
-		<a href="{{url}}">{{title}}</a>
-		<p>
-			{{description}}
-		</p>
-		<a href="#" class="btn btn-default js-upvote {{isEnabled}}">
-			{{upVoted}}
-			<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
-		</a>
-		<a href="#" class="btn btn-default js-downvote {{isEnabled}}">
-			{{downVoted}}
-			<span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-		</a>
-		<p>Created by: {{getUser createdBy}}</p>
-		<p>Added on: {{prettyDate createdOn}}</p>
-		<a href="/url/{{_id}}">go to</a>
-		<!-- you will be putting your up and down vote buttons in here! -->
+	<div class="url_item_out col-xs-12 col-sm-6 col-md-4 col-lg-3">
+		<div class="url_item_in panel panel-primary">
+			{{#if recommends}}<span class="item_recs label label-warning"> </span>{{/if}}
+			<div class="panel-heading item_head">
+				<h4 class="panel-title">
+					<a href="{{url}}" target="_blank" title="visit URL"><span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+					{{title}}
+					</a>
+				</h4>
+			</div>
+			<div class="panel-body item_description">
+				{{description}}
+			</div>
+			<div class="panel-footer">
+				Created on: {{prettyDate createdOn}}<br>
+				by: <b>{{getUser item.createdBy}}</b>
+				<div class="item_controls btn-group btn-group-justified" role="group" aria-label="controls">
+				<a href="#" class="btn btn-success js-upvote {{isEnabled}}" title="click to vote up">
+					<span class="badge">{{upVoted}}</span>
+					<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+				</a>
+				<a href="#" class="btn btn-danger js-downvote {{isEnabled}}" title="click to vote down">
+					<span class="badge">{{downVoted}}</span>
+					<span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+				</a>
+				<a href="/url/{{_id}}" class="btn btn-info" title="visit detail page">
+					<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+				</a>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 <!-- End: Links list Template -->
 <!-- Item -->
 <template name="item">
 	<div class="container">
+		<nav>
+			<ul class="pager">
+				<li class="previous {{prev.enabled}}"><a href="{{prev.link}}"><span aria-hidden="true">&larr;</span> Prev</a></li>
+				<li class="next {{next.enabled}}"><a href="{{next.link}}">Next <span aria-hidden="true">&rarr;</span></a></li>
+			</ul>
+		</nav>
 		<div class="row">
-			{{item.url}}<br>
-			{{item.title}}<br>
-			{{item.description}}<br>
-			
-		</div>
-		<!-- Comments -->
-		{{#each comments}} {{> comment}} {{/each}}
-		<!-- New comment -->
-		{{#if currentUser}}
-		<form class="js-save-comment-form">
-			<div class="form-group">
-				<label for="newcomment">Add comment</label>
-				<textarea cols="40" rows="3" class="form-control" name="newcomment" id="newcomment" placeholder="New comment..."></textarea>
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h2 class="panel-title">
+						<a href="{{item.url}}" target="_blank" title="visit URL"><span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+						{{item.title}}
+						<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a>
+					</h2>
+				</div>
+				<div class="panel-body item_description_full">
+					{{item.description}}
+				</div>
+				<div class="panel-footer">
+					URL: {{item.url}}<br>
+					Created on: {{prettyDate item.createdOn}}, by: <b>{{getUser item.createdBy}}</b>
+				</div>
 			</div>
-			<button type="submit" class="btn btn-default">Send</button>
-		</form>
-		{{/if}}
-		<!-- End: Comments -->
+			<div class="btn-group btn-group-justified" role="group" aria-label="controls">
+				<a href="#" class="btn btn-success js-upvote {{isEnabled}}" title="click to vote up">
+					<span class="badge">{{item.upVoted}}</span>
+					<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+				</a>
+				<a href="#" class="btn btn-danger js-downvote {{isEnabled}}" title="click to vote down">
+					<span class="badge">{{item.downVoted}}</span>
+					<span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+				</a>
+			</div>
+		</div>
+		<hr>
+		<div class="row comments">
+			<!-- Comments -->
+			<h4>Comments</h4> {{#each comments}} {{> comment}} {{/each}}
+			<!-- New comment -->
+			{{#if currentUser}}
+			<form class="js-save-comment-form">
+				<div class="form-group">
+					<label for="newcomment">Add comment</label>
+					<textarea cols="40" rows="3" class="form-control" name="newcomment" id="newcomment" placeholder="New comment..."></textarea>
+				</div>
+				<button type="submit" class="btn btn-primary">Send</button>
+			</form>
+			{{/if}}
+			<!-- End: Comments -->
+		</div>
 	</div>
 </template>
 <template name="comment">
-	<div>
-		<p>{{author}}</p>
-		<p>{{prettyDate createdOn}}</p>
-		<p>{{body}}</p>
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+			by <b>{{author}}</b> on {{prettyDate createdOn}}
+		</div>
+		<div class="panel-body">{{body}}</div>
 	</div>
 </template>
 <!-- End: Item -->
-<!-- Recommends -->
-<template name="recommends">
-	<hr>
-</template>
-<!-- End: Recommends -->
+
 <!-- Footer Template -->
 <template name="footer">
 	<footer>
 		<div class="container">
-			footer
+			
 		</div>
 	</footer>
 </template>
