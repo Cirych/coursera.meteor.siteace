@@ -59,13 +59,6 @@ Template.registerHelper('prettyDate', function(date) {
 Template.registerHelper('_id', function() {
 	return this._id._str;
 });
-Template.registerHelper('getUser', function(userId) {
-	let user = Meteor.users.findOne({_id:userId});
-		if(user)
-			return user.username;
-		else
-			return "anon";
-});
 Template.registerHelper('isEnabled', function() {
 	return Meteor.user()?"":"disabled";;
 });

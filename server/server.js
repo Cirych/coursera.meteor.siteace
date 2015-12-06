@@ -17,20 +17,21 @@ Meteor.startup(function () {
     		description: "This is where this course was developed.",
       upVoted: 0,
       downVoted: 0,
-    		createdOn: new Date()
+    		createdOn: new Date(),
+        createdByName: "FireStarter"
     });
 
     Comments.insert({
       websiteId: GoldsmithsId,
       userId: null,
-      author: null,
+      author: "FireStarter",
       createdOn: new Date(),
       body: "test1"
     });
     Comments.insert({
       websiteId: GoldsmithsId,
       userId: null,
-      author: null,
+      author: "FireStarter",
       createdOn: new Date(),
       body: "test2"
     });
@@ -41,7 +42,8 @@ Meteor.startup(function () {
     		description: "University of London International Programme.",
       upVoted: 0,
       downVoted: 0,
-    		createdOn: new Date()
+    		createdOn: new Date(),
+        createdByName: "FireStarter"
     });
     Websites.insert({
     		title: "Coursera",
@@ -49,7 +51,8 @@ Meteor.startup(function () {
     		description: "Universal access to the world’s best education.",
       upVoted: 0,
       downVoted: 0,
-    		createdOn: new Date()
+    		createdOn: new Date(),
+        createdByName: "FireStarter"
     });
     Websites.insert({
     		title: "Google",
@@ -57,7 +60,8 @@ Meteor.startup(function () {
     		description: "Popular search engine.",
       upVoted: 0,
       downVoted: 0,
-    		createdOn: new Date()
+    		createdOn: new Date(),
+        createdByName: "FireStarter"
     });
   }
 });

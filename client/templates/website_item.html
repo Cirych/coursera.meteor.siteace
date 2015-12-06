@@ -14,7 +14,7 @@
 			</div>
 			<div class="panel-footer">
 				Created on: {{prettyDate createdOn}}
-				<br> by: <b>{{getUser item.createdBy}}</b>
+				<br> by: <b>{{createdByName}}</b>
 				<div class="item_controls btn-group btn-group-justified" role="group" aria-label="controls">
 					<a href="#" class="btn btn-success js-upvote {{upEnabled}} {{isEnabled}}" title="click to vote up">
 						<span class="badge">{{upVoted}}</span>

@@ -44,7 +44,8 @@ Template.welcome.events({
 				upVoted: 0,
 				downVoted: 0,
 				createdOn: new Date(),
-				createdBy: Meteor.user()._id
+				createdBy: Meteor.user()._id,
+				createdByName: Meteor.user().username
 			});
 		}
 		$("#website_form").modal('hide');
