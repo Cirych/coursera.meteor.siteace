@@ -1,0 +1,45 @@
+<template name="welcome">
+	<div class="container">
+		<div class="jumbotron1">
+			<h1>Welcome to image share {{username}}!</h1> {{#if currentUser}}
+			<a class="btn btn-primary js-toggle-website-form" href="#" title="Add new URL">
+				<span class="item_add glyphicon glyphicon-plus" aria-hidden="true"></span> Add new URL!
+			</a>
+			{{/if}}
+		</div>
+	</div>
+	<!-- New link form Template -->
+	<!-- show if user logged in -->
+	<div id="website_form" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">New URL</h4>
+				</div>
+				<form class="js-save-website-form">
+					<div class="modal-body">
+						{{#if currentUser}}
+						<div class="form-group">
+							<label for="url">Site address</label>
+							<input type="text" class="form-control" id="url" placeholder="http://www.mysite.com">
+						</div>
+						<div class="form-group">
+							<label for="title">Title</label>
+							<input type="text" class="form-control" id="title" placeholder="Mysite">
+						</div>
+						<div class="form-group">
+							<label for="description">Description</label>
+							<input type="text" class="form-control" id="description" placeholder="I found this site really useful for ...">
+						</div>
+						{{else}} Login {{/if}}
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary">Submit</button>
+						<button class="btn btn-warning" data-dismiss="modal">cancel</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</template>

@@ -53,6 +53,11 @@ Router.route('/url/:_id', function () {
 /////
 
 // helper function that returns all available websites
+Template.navbar.helpers({
+	searchValue(){
+		return Session.get("searchValue");
+	}
+});
 Template.website_list.helpers({
 	websites(){
 		//Meteor.subscribe("websites", Session.get("searchValue"));
@@ -76,7 +81,12 @@ Template.website_item.helpers({
 /////
 Template.navbar.events({
 	"submit #search":function(event){
-		Session.set("searchValue", event.target.searchValue.value);
+		Session.set("searchValue", event.target.searchValue.value.trim());
+		return false;
+	},
+	"click #searchRemove":function(event){
+		Session.set("searchValue", null);
+		searchValue.value = null;
 		return false;
 	}
 });
@@ -156,6 +166,12 @@ Template.item.events({
 		}
 		event.target.newcomment.value = "";
 		return false;
+	}
+});
+
+Template.footer.events({
+	"click .js-toggle-help":function(event){
+		$("#help").modal('show');
 	}
 });
 

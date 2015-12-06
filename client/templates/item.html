@@ -1,0 +1,54 @@
+<template name="item">
+	<div class="container">
+		<nav>
+			<ul class="pager">
+				<li class="previous {{prev.enabled}}"><a href="{{prev.link}}"><span aria-hidden="true">&larr;</span> Prev</a></li>
+				<li class="next {{next.enabled}}"><a href="{{next.link}}">Next <span aria-hidden="true">&rarr;</span></a></li>
+			</ul>
+		</nav>
+		<div class="row">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h2 class="panel-title">
+						<a href="{{item.url}}" target="_blank" title="visit URL"><span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+						{{item.title}}
+						<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a>
+					</h2>
+				</div>
+				<div class="panel-body item_description_full">
+					{{item.description}}
+				</div>
+				<div class="panel-footer">
+					URL: {{item.url}}
+					<br> Created on: {{prettyDate item.createdOn}}, by: <b>{{getUser item.createdBy}}</b>
+				</div>
+			</div>
+			<div class="btn-group btn-group-justified" role="group" aria-label="controls">
+				<a href="#" class="btn btn-success js-upvote {{isEnabled}}" title="click to vote up">
+					<span class="badge">{{item.upVoted}}</span>
+					<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+				</a>
+				<a href="#" class="btn btn-danger js-downvote {{isEnabled}}" title="click to vote down">
+					<span class="badge">{{item.downVoted}}</span>
+					<span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+				</a>
+			</div>
+		</div>
+		<hr>
+		<div class="row comments">
+			<!-- Comments -->
+			<h4>Comments</h4> {{#each comments}} {{> comment}} {{/each}}
+			<!-- New comment -->
+			{{#if currentUser}}
+			<form class="js-save-comment-form">
+				<div class="form-group">
+					<label for="newcomment">Add comment</label>
+					<textarea cols="40" rows="3" class="form-control" name="newcomment" id="newcomment" placeholder="New comment..."></textarea>
+				</div>
+				<button type="submit" class="btn btn-primary">Send</button>
+			</form>
+			{{/if}}
+			<!-- End: Comments -->
+		</div>
+	</div>
+</template>
