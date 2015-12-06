@@ -24,11 +24,11 @@
 				</div>
 			</div>
 			<div class="btn-group btn-group-justified" role="group" aria-label="controls">
-				<a href="#" class="btn btn-success js-upvote {{isEnabled}}" title="click to vote up">
+				<a href="#" class="btn btn-success js-upvote {{upEnabled}} {{isEnabled}}" title="click to vote up">
 					<span class="badge">{{item.upVoted}}</span>
 					<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
 				</a>
-				<a href="#" class="btn btn-danger js-downvote {{isEnabled}}" title="click to vote down">
+				<a href="#" class="btn btn-danger js-downvote {{downEnabled}} {{isEnabled}}" title="click to vote down">
 					<span class="badge">{{item.downVoted}}</span>
 					<span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
 				</a>
