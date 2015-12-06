@@ -66,9 +66,6 @@ Template.website_list.helpers({
 	}
 });
 Template.website_item.helpers({
-	isEnabled() {
-		return Meteor.user()?"":"disabled";
-	},
 	recommends(){
 		return Meteor.users.findOne({'profile.recommends':this._id});
 	}
@@ -176,6 +173,9 @@ Template.registerHelper('getUser', function(userId) {
 			return user.username;
 		else
 			return "anon";
+});
+Template.registerHelper('isEnabled', function() {
+	return Meteor.user()?"":"disabled";;
 });
 
 /// accounts config
